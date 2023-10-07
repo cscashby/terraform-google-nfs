@@ -38,6 +38,7 @@ resource "google_compute_address" "default" {
   region       = var.region
   network_tier = var.attach_public_ip == false ? null : var.network_tier
   address_type = var.attach_public_ip == false ? "INTERNAL" : "EXTERNAL"
+  subnetwork = var.attach_public_ip == false ? var.subnetwork : null
 }
 
 // Use an external disk so that it can be remounted on another instance.
@@ -67,7 +68,7 @@ resource "google_compute_instance_template" "tpl" {
     apt update && apt install -y nfs-kernel-server
     %{for path in var.export_paths}
     mkdir -p ${path}
-    chown nobody:nogroup ${path}
+    chown 33:33 ${path}
     chmod 777 ${path}
     echo '${path} *(rw,sync,no_subtree_check)' >> /etc/exports
     %{endfor}
