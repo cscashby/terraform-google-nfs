@@ -70,7 +70,7 @@ resource "google_compute_instance_template" "tpl" {
     mkdir -p ${path}
     chown 33:33 ${path}
     chmod 777 ${path}
-    echo '${path} *(rw,sync,no_subtree_check)' >> /etc/exports
+    echo '${path} *(rw,sync,no_subtree_check,no_root_squash)' >> /etc/exports
     %{endfor}
     systemctl restart nfs-kernel-server
 
